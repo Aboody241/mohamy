@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mohamy/features/add_case/UI/pages/add_case_screen.dart';
+import 'package:mohamy/features/casses_list/UI/pages/cases_list_screen.dart';
+import 'package:mohamy/features/home/UI/home_screen.dart';
 import 'package:mohamy/features/settings/UI/pages/profile_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
-
-import '../../features/add_case/UI/pages/add_case_screen.dart';
-import '../../features/casses_list/UI/pages/cases_list_screen.dart';
-import '../../features/home/UI/home_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -24,7 +23,7 @@ class _MainShellState extends State<MainShell> {
 
   List<Widget> get _screens => const [
         HomeScreen(),
-        AddCaseScreen(),
+        AddCaseScreen(popOnSave: false),
         CasesListScreen(mode: CasesListMode.view),
         ProfilePage(),
       ];
@@ -43,10 +42,10 @@ class _MainShellState extends State<MainShell> {
           title: 'إضافة قضية',
         ),
         PersistentBottomNavBarItem(
-          icon: const Icon(Icons.list_alt),
+          icon: const Icon(Icons.edit_note_sharp),
           activeColorPrimary: Colors.indigo,
           inactiveColorPrimary: Colors.grey,
-          title: 'قائمة القضايا',
+          title: 'تعديل القضايا',
         ),
         PersistentBottomNavBarItem(
           icon: const Icon(Icons.person),

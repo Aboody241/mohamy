@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'core/utils/main_shell.dart';
+import 'package:mohamy/core/styles/utils/main_shell.dart';
+import 'package:mohamy/features/cases/controller/case_provider.dart';
+import 'package:mohamy/features/cases/controller/repository/case_repository.dart';
 
 void main() {
   runApp(const CaseManagerApp());
@@ -35,9 +36,12 @@ class CaseManagerApp extends StatelessWidget {
               ),
             ),
           ),
-          builder: (context, child) => Directionality(
+          builder: (context, appChild) => Directionality(
             textDirection: TextDirection.rtl,
-            child: child ?? const SizedBox.shrink(),
+            child: CaseProvider(
+              repository: CaseRepository(),
+              child: appChild ?? const SizedBox.shrink(),
+            ),
           ),
           home: const MainShell(),
         );

@@ -1,7 +1,11 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class AddCaseScreen extends StatefulWidget {
-  const AddCaseScreen({super.key});
+  /// لو الشاشة مفتوحة بـ Navigator.push خليها true (الافتراضي)
+  /// لو الشاشة جزء من Tab في BottomNavigation خليها false
+  final bool popOnSave;
+
+  const AddCaseScreen({super.key, this.popOnSave = true});
 
   @override
   State<AddCaseScreen> createState() => _AddCaseScreenState();
@@ -40,8 +44,19 @@ class _AddCaseScreenState extends State<AddCaseScreen> {
     }
   }
 
+  void _clearForm() {
+    _caseNameController.clear();
+    _clientNameController.clear();
+    _detailsController.clear();
+    _phoneController.clear();
+    setState(() {
+      _reviewDate = null;
+    });
+  }
+
   void _saveCase() {
     if (!_formKey.currentState!.validate()) return;
+
     if (_reviewDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('يرجى اختيار موعد المتابعة')),
@@ -49,19 +64,27 @@ class _AddCaseScreenState extends State<AddCaseScreen> {
       return;
     }
 
-    // TODO: حفظ بيانات القضية في قاعدة البيانات / API
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('تم حفظ القضية بنجاح')),
-    );
-    Navigator.pop(context);
+    // TODO: حفظ بيانات القضية في قاعدة البيانات أو عبر API
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('تم حفظ القضية بنجاح')));
+
+    final canPop = Navigator.of(context).canPop();
+    if (widget.popOnSave && canPop) {
+      // لو الشاشة مفتوحة بـ Navigator.push ارجع للخلف
+      Navigator.pop(context);
+      return;
+    }
+
+    // لو الشاشة جزء من Tab في البوتوم بار امسح الحقول وابقى في نفس المكان
+    _clearForm();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('إضافة قضية جديدة'),
-      ),
+      appBar: AppBar(title: const Text('إضافة قضية جديدة')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
@@ -74,14 +97,15 @@ class _AddCaseScreenState extends State<AddCaseScreen> {
                   labelText: 'اسم القضية',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? 'يجب إدخال اسم القضية' : null,
+                validator: (value) => (value == null || value.isEmpty)
+                    ? 'يجب إدخال اسم القضية'
+                    : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _clientNameController,
                 decoration: const InputDecoration(
-                  labelText: 'اسم العميل',
+                  labelText: 'اسم الموكل',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -121,10 +145,10 @@ class _AddCaseScreenState extends State<AddCaseScreen> {
               ),
               const SizedBox(height: 12),
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
                 child: TextButton.icon(
                   onPressed: () {
-                    // TODO: File picker for attachments
+                    // TODO: File picker للمرفقات
                   },
                   icon: const Icon(Icons.attach_file),
                   label: const Text('إرفاق مستندات (اختياري)'),
@@ -137,10 +161,7 @@ class _AddCaseScreenState extends State<AddCaseScreen> {
                   onPressed: _saveCase,
                   child: const Padding(
                     padding: EdgeInsets.symmetric(vertical: 12),
-                    child: Text(
-                      'حفظ القضية',
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    child: Text('حفظ القضية', style: TextStyle(fontSize: 16)),
                   ),
                 ),
               ),

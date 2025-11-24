@@ -30,9 +30,12 @@ environment:
 dependencies:
   adaptive_screen_utils: ^2.4.0
   cupertino_icons: ^1.0.8
+  dialog: ^0.8.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^9.1.1
   flutter_screenutil: ^5.9.3
+  gap: ^3.0.1
   google_fonts: ^6.2.1
   persistent_bottom_nav_bar: ^6.2.1
 
